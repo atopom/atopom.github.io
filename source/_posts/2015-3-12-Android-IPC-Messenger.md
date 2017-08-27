@@ -11,13 +11,13 @@ categories:
 - Note
 ---
 
-# Messenger:信使
+# Messenger信使
 
 > 官方文档解释：它引用了一个Handler对象，以便others能够向它发送消息(使用mMessenger.send(Message msg)方法)。该类允许跨进程间基于Message通信(即两个进程间可以通过Message进行通信)。简单理解，就是在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以与服务端通信了。
 
 以前我们使用Handler+Message的方式进行通信，都是在同一个进程中，从线程持有一个主线程的Handler对象，并向主线程发送消息。
 
-Android可以使用bindler机制进行跨进行通信，所以我们就可以将Handler与bindler结合起来进行跨进程发送消息。查看API就可以发现，Messenger就是通过这种方式的实现。
+Android可以使用binder机制进行跨进行通信，所以我们就可以将Handler与binder结合起来进行跨进程发送消息。查看API就可以发现，Messenger就是通过这种方式的实现。
 
 一般使用方法如下：
 
@@ -25,12 +25,12 @@ Android可以使用bindler机制进行跨进行通信，所以我们就可以将
 > mMessenger = new Messenger(mHandler)
 创建一个信使对象
 
-2. 客户端使用bindlerService请求连接远程
+2. 客户端使用binderService请求连接远程
 
-3. 远程onBind方法返回一个bindler
+3. 远程onBind方法返回一个binder
 > return mMessenger.getBinder();
 
-4. 客户端使用远程返回的bindler得到一个信使（即得到远程信使）
+4. 客户端使用远程返回的binder得到一个信使（即得到远程信使）
 ```
 public void onServiceConnected(ComponentName name, IBinder service) {
      rMessenger = new Messenger(service);    

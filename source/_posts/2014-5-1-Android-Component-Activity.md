@@ -30,7 +30,7 @@ Android应用组件Activity是Android程序的呈现层，显示可视化的用�
 5. onStop：     Activity变成用户不可见的时候调用
 6. onDestroy：     Activity被系统消毁的时候调用
 
-![Activity生命周期](https://developer.android.com/images/activity_lifecycle.png)
+![Activity生命周期](/images/Android/Activity_Lifecycle.png)
 
 > 如：同一个APP中一个Activity（A）跳转到另一个Activity（B）时：
 A   onPause （A先进入onPause状态，B才能创建）
@@ -44,7 +44,7 @@ A   onStop
 1. onSaveInstanceState：Android系统因资源不足终止Activity前，调用此方法。用于保存Activity的状态信息，供onRestoreInstanceState()或onCreate()恢复时用。
 2. onRestoreInstanceState()：恢复onSaveInstanceState()保存的Activity状态信息，在onStart()之后调用。
 
-![Activity异常状态的工作过程](/images/Android/Activity_Exception_RecycleLife.png)
+![Activity异常状态的工作过程](/images/Android/Activity_Exception_Lifecycle.png)
 
 ## configChanges配置
 
