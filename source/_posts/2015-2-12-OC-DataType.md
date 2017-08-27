@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "OC学习之旅－数据类型"
-date:   2015-02-07 18:28:37 +0800
-author: BlueDolphin
+date:   2015-02-12 18:28:37 +0800
+author: Atopom
 categories:
 - Work
 - Technology
@@ -45,7 +45,7 @@ NSLog的格式符：％f
 NSLog的格式符:%c  
 long double 常量写成尾部带有字母 l 或者 L 的浮点常量。1.234e+7L  
 
-![](../images/OC/OC-Int-NSLog-Format-Character.png)
+![](/images/OC/OC-Int-NSLog-Format-Character.png)
 
 注:id类型可以通过类型转化符可以将一般的id类型的对象转换成特定的对象。  
 

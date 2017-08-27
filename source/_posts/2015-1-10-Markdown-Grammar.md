@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 学习使用Markdown语法
-date: '2015-01-03 21:28:37 +0800'
+date: '2015-01-10 21:28:37 +0800'
 author: Atopom
 categories:
 - Work

@@ -78,5 +78,5 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/13001111269/13001111269.github.io.git
+  repo: https://github.com/atopom/atopom.github.io.git
   branch: master
