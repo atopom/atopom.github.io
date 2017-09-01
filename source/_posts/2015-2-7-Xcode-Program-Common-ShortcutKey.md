@@ -17,9 +17,6 @@ published: true
 > 想要更畅快的开发，熟悉常用快捷键那时必不可少的。
 > 内容会持续更新，如有错误，请指正，谢谢～。
 
-* content
-{:toc}
-
 # Command组合
 > Command+R:表示Run Project  
 > Command+B:表示Build Project  

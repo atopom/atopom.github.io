@@ -21,13 +21,11 @@ Android可以使用binder机制进行跨进行通信，所以我们就可以将H
 
 一般使用方法如下：
 
-1. 远程通过
-> mMessenger = new Messenger(mHandler)
-创建一个信使对象
+1. 远程通过 mMessenger = new Messenger(mHandler) 创建一个信使对象
 
-2. 客户端使用binderService请求连接远程
+2. 客户端使用 binderService 请求连接远程
 
-3. 远程onBind方法返回一个binder
+3. 远程 onBind 方法返回一个binder
 > return mMessenger.getBinder();
 
 4. 客户端使用远程返回的binder得到一个信使（即得到远程信使）
@@ -38,20 +36,25 @@ public void onServiceConnected(ComponentName name, IBinder service) {
 }
 ```
 这里虽然是new了一个Messenger，但我们查看它的实现
+```
 public Messenger(IBinder target) { mTarget = IMessenger.Stub.asInterface(target); }
-
+```
 发现它的mTarget是通过AIDL得到的，实际上就是远程创建的那个。
 
 5. 客户端可以使用这个远程信使对象向远程发送消息：
-> rMessenger.send(msg);
+```
+rMessenger.send(msg);
+```
 
 这样远程服务端的Handler对象就能收到消息了，然后可以在其handlerMessage(Message msg)方法中进行处理。（该Handler对象就是第一步服务端创建Messenger时使用的参数mHandler）。
 
 经过这5个步骤貌似只有客户端向服务端发送消息，这样的消息传递是单向的，那么如何实现双向传递呢？
 
 首先需要在第5步稍加修改，在send(msg)前通过msm.replyTo = mMessenger将自己的信使设置到消息中，这样服务端接收到消息时同时也得到了客户端的信使对象了，然后服务端可以通过得到客户端的信使对象，并向它发送消息。
-> cMessenger = msg.replyTo;
+```
+cMessenger = msg.replyTo;
 cMessenger.send(message);
+```
 
 即完成了从服务端向客户端发送消息的功能，这样客服端可以在自己的Handler对象的handlerMessage方法中接收服务端发送来的message进行处理。
 
@@ -312,3 +315,5 @@ public class MyService extends Service {
 07-27 10:46:54.220: D/wangyanan(8876): >>>>>>>>>> hello service <<<<<<<<<<
 07-27 10:46:54.220: D/wangyanan(8876): >>>>>>>>>> hello client <<<<<<<<<<
 ```
+
+代码地址：https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1

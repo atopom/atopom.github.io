@@ -13,9 +13,6 @@ published: true
 
 > Markdown语法在简书上分分钟实现效果，在github有一丁点错误都不行，整理了好长时间，总算正确显示出来了。  
 
-* content
-{:toc}
-
 分割线
 ---------
 源码  
