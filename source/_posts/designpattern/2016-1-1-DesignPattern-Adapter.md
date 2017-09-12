@@ -2,11 +2,9 @@
 title: DesignPattern-Adapter
 date: 2016-01-01 08:27:02
 tags:
-- DesignPattern
 - Adapter
 categories:
-- Work
-- Note
+- DesignPattern
 ---
 
 # 适配器模式 Adapter

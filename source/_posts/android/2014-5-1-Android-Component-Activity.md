@@ -2,12 +2,9 @@
 title: Android-Component-Activity
 date: 2014-05-01 14:56:06
 tags:
-- Android
 - Activity
 categories:
-- Work
-- Technology
-- Note
+- Android
 ---
 
 # Activity介绍

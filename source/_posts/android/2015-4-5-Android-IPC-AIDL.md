@@ -2,13 +2,10 @@
 title: Android-IPC-AIDL
 date: 2015-04-05 14:57:20
 tags:
-- Android
 - IPC
 - AIDL
 categories:
-- Work
-- Technology
-- Note
+- Android
 ---
 
 # 一、AIDL是什么
@@ -653,4 +650,5 @@ public class AIDLActivity extends AppCompatActivity implements View.OnClickListe
 # 五、AIDL结构类图
 ![AIDL结构类图](/images/Android/AIDL_Class_Diagram.png)
 
-代码地址：https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1
+# 代码地址
+> https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1

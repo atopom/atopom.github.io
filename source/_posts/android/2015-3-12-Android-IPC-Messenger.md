@@ -2,13 +2,10 @@
 title: Android-IPC-Messenger
 date: 2015-03-12 16:38:10
 tags:
-- Android
 - IPC
 - Messenger
 categories:
-- Work
-- Technology
-- Note
+- Android
 ---
 
 # Messenger信使
@@ -316,4 +313,5 @@ public class MyService extends Service {
 07-27 10:46:54.220: D/wangyanan(8876): >>>>>>>>>> hello client <<<<<<<<<<
 ```
 
-代码地址：https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1
+# 代码地址
+> https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1

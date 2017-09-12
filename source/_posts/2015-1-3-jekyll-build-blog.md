@@ -3,12 +3,10 @@ layout: post
 title:  "通过GitHub和Jekyll搭建属于自己的博客"
 date:   2015-01-03 20:29:37 +0800
 author: Atopom
-categories:
-- Work
-- Technology
 tags:
-- Jekyll
 - GitHub
+categories:
+- Jekyll
 published: true
 ---
 

@@ -3,10 +3,9 @@ layout: post
 title: 学习使用Markdown语法
 date: '2015-01-10 21:28:37 +0800'
 author: Atopom
-categories:
-- Work
-- Technology
 tags:
+- 语法
+categories:
 - Markdown
 published: true
 ---
