@@ -1,6 +1,6 @@
 ---
 layout: post
-title: OC学习之旅－Xcode常用快捷键
+title: Xcode常用快捷键
 date: '2015-02-07 18:28:37 +0800'
 author: Atopom
 tags:

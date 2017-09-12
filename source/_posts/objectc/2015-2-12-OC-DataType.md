@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "OC学习之旅－数据类型"
+title:  "Object-C－DataType"
 date:   2015-02-12 18:28:37 +0800
 author: Atopom
 tags:
