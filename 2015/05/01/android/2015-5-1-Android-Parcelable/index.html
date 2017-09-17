@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Parcelable,Serializable,序列化," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Parcelable接口Parcelable是android.io包下的接口，是Android中推荐使用的序列化接口。 只要实现Parcelable接口的类，就可以使用Parcel进行序列化和反序列化操作。 实现Pacelable接口12345678910111213141516171819202122232425262728293031323334353637383940414243444546">
+<meta name="keywords" content="Parcelable,Serializable,序列化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Parcelable">
+<meta property="og:url" content="http://yoursite.com/2015/05/01/android/2015-5-1-Android-Parcelable/index.html">
+<meta property="og:site_name" content="Atopom博客">
+<meta property="og:description" content="Parcelable接口Parcelable是android.io包下的接口，是Android中推荐使用的序列化接口。 只要实现Parcelable接口的类，就可以使用Parcel进行序列化和反序列化操作。 实现Pacelable接口12345678910111213141516171819202122232425262728293031323334353637383940414243444546">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1623602-20ff163f433fa87b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-17T12:52:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-Parcelable">
+<meta name="twitter:description" content="Parcelable接口Parcelable是android.io包下的接口，是Android中推荐使用的序列化接口。 只要实现Parcelable接口的类，就可以使用Parcel进行序列化和反序列化操作。 实现Pacelable接口12345678910111213141516171819202122232425262728293031323334353637383940414243444546">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1623602-20ff163f433fa87b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/05/01/android/2015-5-1-Android-Parcelable/"/>
+
+
+
+
+
+  <title>Android-Parcelable | Atopom博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Atopom博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/05/01/android/2015-5-1-Android-Parcelable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王亚楠">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Atopom博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android-Parcelable</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-01T19:13:00+08:00">
+                2015-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Parcelable接口"><a href="#Parcelable接口" class="headerlink" title="Parcelable接口"></a>Parcelable接口</h1><p>Parcelable是android.io包下的接口，是Android中推荐使用的序列化接口。</p>
+<p>只要实现Parcelable接口的类，就可以使用Parcel进行序列化和反序列化操作。</p>
+<h1 id="实现Pacelable接口"><a href="#实现Pacelable接口" class="headerlink" title="实现Pacelable接口"></a>实现Pacelable接口</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">public class Book implements Parcelable &#123;</div><div class="line"></div><div class="line">    private String name;</div><div class="line">    private int price;</div><div class="line"></div><div class="line">    public String getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public int getPrice() &#123;</div><div class="line">        return price;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setPrice(int price) &#123;</div><div class="line">        this.price = price;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Book() &#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected Book(Parcel in) &#123;</div><div class="line">        name = in.readString();</div><div class="line">        price = in.readInt();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 固定写法，在Pacel进行反序列化的时候，会通过反射调用CREATOR的方法。    </div><div class="line">    public static final Creator&lt;Book&gt; CREATOR = new Creator&lt;Book&gt;() &#123;</div><div class="line">        @Override</div><div class="line">        public Book createFromParcel(Parcel in) &#123;</div><div class="line">            return new Book(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Book[] newArray(int size) &#123;</div><div class="line">            return new Book[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeInt(price);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Parcel是什么"><a href="#Parcel是什么" class="headerlink" title="Parcel是什么"></a>Parcel是什么</h1><blockquote>
+<p>Parcel简单来说是一套机制。可以将序列化之后的数据写入到一个共享内存中，其他进程通过Parcel可以从这块共享内存中读出字节流，并反序列化成对象。<br><img src="http://upload-images.jianshu.io/upload_images/1623602-20ff163f433fa87b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Parcel的工作流程"></p>
+</blockquote>
+<h2 id="Parcel的读写源码"><a href="#Parcel的读写源码" class="headerlink" title="Parcel的读写源码"></a>Parcel的读写源码</h2><h3 id="Parcel-writeParcelable"><a href="#Parcel-writeParcelable" class="headerlink" title="Parcel.writeParcelable"></a>Parcel.writeParcelable</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public final void writeParcelable(Parcelable p, int parcelableFlags) &#123;</div><div class="line">    //  先向流中写入p的ClassName</div><div class="line">    writeParcelableCreator(p);</div><div class="line">    // 然后直接调用p的writeToParcel，这个方法也就是我们自己重写的</div><div class="line">    p.writeToParcel(this, parcelableFlags);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>这里需要注意的是，每一个Parcelable对象在写入流之前，都会在前面首先写入这个对象的ClassName，主要是方便后面读的时候，能够知道是哪个类，感觉这个地方还是做的比较粗糙，在Serializable中对应一个序列化类的信息刻画比这简单的一个类名要靠谱得多，所以官方文档上才会说，如果你想进行持久化存储，那么Parcelable不是你的菜，道理很简单，这里不会有任何版本的概念，只要你的类名不改，旧版本的数据就可以被新版本的class进行反序列化，然而class里面的属性可能已经完全不一样了。</p>
+</blockquote>
+<h3 id="Parcel-readParcelable"><a href="#Parcel-readParcelable" class="headerlink" title="Parcel.readParcelable"></a>Parcel.readParcelable</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public final &lt;T extends Parcelable&gt; T readParcelable(ClassLoader loader) &#123;</div><div class="line">    // 1. 首先会调用到readParcelableCreator，通过反射读取我们类中定义的CREATOR</div><div class="line">    Parcelable.Creator&lt;?&gt; creator = readParcelableCreator(loader);</div><div class="line">    if (creator == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    if (creator instanceof Parcelable.ClassLoaderCreator&lt;?&gt;) &#123;</div><div class="line">      Parcelable.ClassLoaderCreator&lt;?&gt; classLoaderCreator =</div><div class="line">          (Parcelable.ClassLoaderCreator&lt;?&gt;) creator;</div><div class="line">      return (T) classLoaderCreator.createFromParcel(this, loader);</div><div class="line">    &#125;</div><div class="line">    // 2. 然后直接调用CREATOR.createFromParcel(parcel)</div><div class="line">    return (T) creator.createFromParcel(this);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">// 首先会调用到readParcelableCreator，通过反射读取我们类中定义的CREATOR</div><div class="line">public final Parcelable.Creator&lt;?&gt; readParcelableCreator(ClassLoader loader) &#123;</div><div class="line">    // 首先把类名读取出来</div><div class="line">    String name = readString();</div><div class="line"></div><div class="line">    Parcelable.Creator&lt;?&gt; creator;</div><div class="line">    // mCreators做了一下缓存，如果之前某个classloader把一个parcelable的Creator获取过</div><div class="line">    // 那么就不需要通过反射去查找了</div><div class="line"></div><div class="line">    synchronized (mCreators) &#123;</div><div class="line">        HashMap&lt;String,Parcelable.Creator&lt;?&gt;&gt; map = mCreators.get(loader);</div><div class="line">        if (map == null) &#123;</div><div class="line">            map = new HashMap&lt;&gt;();</div><div class="line">            mCreators.put(loader, map);</div><div class="line">        &#125;</div><div class="line">        creator = map.get(name);</div><div class="line">        if (creator == null) &#123;</div><div class="line">            try &#123;</div><div class="line">                // If loader == null, explicitly emulate Class.forName(String) &quot;caller</div><div class="line">                // classloader&quot; behavior.</div><div class="line">                ClassLoader parcelableClassLoader =</div><div class="line">                        (loader == null ? getClass().getClassLoader() : loader);</div><div class="line">                // 加载我们自己实现Parcelable接口的类</div><div class="line">                Class&lt;?&gt; parcelableClass = Class.forName(name, false,</div><div class="line">                        parcelableClassLoader);</div><div class="line"></div><div class="line">                Field f = parcelableClass.getField(&quot;CREATOR&quot;);</div><div class="line">                Class&lt;?&gt; creatorType = f.getType();</div><div class="line">                creator = (Parcelable.Creator&lt;?&gt;) f.get(null);</div><div class="line">            &#125;</div><div class="line">            catch (Exception e) &#123;</div><div class="line">                    // catch exception</div><div class="line">            &#125;</div><div class="line">            if (creator == null) &#123;</div><div class="line">                throw new BadParcelableException(&quot;Parcelable protocol requires a &quot;</div><div class="line">                        + &quot;non-null Parcelable.Creator object called &quot;</div><div class="line">                        + &quot;CREATOR on class &quot; + name);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            map.put(name, creator);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return creator;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Serializable接口"><a href="#Serializable接口" class="headerlink" title="Serializable接口"></a>Serializable接口</h1><p>Serializable是java.io包下的一个接口，是Java类进行序列化和反序列化的标记接口。</p>
+<p>一个类实现了Serializable接口，就可以被ObjectOutputStream和ObjectInputStream进行序列化和反序列化的操作。</p>
+<p>被transient描述的属性或类的静态变量是不会被序列化的。</p>
+<p>如果一个实现了Serializable接口的类，继承了另外一个类。那么这个类的父类，必须继承Serializable或者提供一个空构造方法。</p>
+<blockquote>
+<p>反序列化产生的对象并不是通过构造器创造的，所以依赖构造器保证的约束条件在对象反序列化时都无法保证。比如一个设计成单利的类，如果能序列化，那么可以反序列化出N个对象。</p>
+</blockquote>
+<h1 id="序列化和反序列化中隐藏的方法"><a href="#序列化和反序列化中隐藏的方法" class="headerlink" title="序列化和反序列化中隐藏的方法"></a>序列化和反序列化中隐藏的方法</h1><p>具体的方法修饰符，private protected public 都可以，序列化和反序列化都是通过反射来调用的。</p>
+<h2 id="private-Object-writeReplace-throws-ObjectStreamException-ObjectOutPutStream"><a href="#private-Object-writeReplace-throws-ObjectStreamException-ObjectOutPutStream" class="headerlink" title="private Object writeReplace() throws ObjectStreamException ObjectOutPutStream"></a>private Object writeReplace() throws ObjectStreamException ObjectOutPutStream</h2><blockquote>
+<p>在序列化一个对象时，会首先调用这个方法，此方法中可以替换原有序列化的对象。</p>
+</blockquote>
+<h2 id="private-void-writeObject-java-io-ObjectOutputStream-out-throws-IOException"><a href="#private-void-writeObject-java-io-ObjectOutputStream-out-throws-IOException" class="headerlink" title="private void writeObject(java.io.ObjectOutputStream out) throws IOException"></a>private void writeObject(java.io.ObjectOutputStream out) throws IOException</h2><blockquote>
+<p>调用ObjectOutputStream.defaultWriteObject()使用的是默认的序列化过程，在调用defaultWriteObject方法后，可以往out流中写入一些数据，在readObject中可以读取。</p>
+</blockquote>
+<h2 id="private-void-readObject-java-io-ObjectInputStream-in-throws-IOException-ClassNotFoundException"><a href="#private-void-readObject-java-io-ObjectInputStream-in-throws-IOException-ClassNotFoundException" class="headerlink" title="private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException"></a>private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException</h2><blockquote>
+<p>在writeObject中写入的数据，在此方法中需要以写入顺序读取，同时我们注意到这里已经把参数inputstream回调给我们了，我们可以在这个位置注册一个回调，可以在validateObject方法中检查这个反序列化对象是否合法。</p>
+</blockquote>
+<h2 id="private-Object-readResolve-throws-ObjectStreamException"><a href="#private-Object-readResolve-throws-ObjectStreamException" class="headerlink" title="private Object readResolve() throws ObjectStreamException"></a>private Object readResolve() throws ObjectStreamException</h2><blockquote>
+<p>此方法中可以替换反序列化出来的对象。</p>
+</blockquote>
+<h1 id="实现Serializable接口"><a href="#实现Serializable接口" class="headerlink" title="实现Serializable接口"></a>实现Serializable接口</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Person类除了writeReplace在序列化时用到,其他的黑科技方法都不会被调用</div><div class="line"> * 原因是我们在writeReplace中将序列化对象替换成了内部代理类,所以以后的序列化过程就是针对SerializableProxy</div><div class="line"> */</div><div class="line">class Person implements Serializable &#123;</div><div class="line"></div><div class="line">	private static final long serialVersionUID = 1L;</div><div class="line">	public String desc;</div><div class="line"></div><div class="line">	public Person(String desc) &#123;</div><div class="line">		this.desc = desc;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	static class SerializableProxy implements Serializable &#123;</div><div class="line"></div><div class="line">		private static final long serialVersionUID = 1L;</div><div class="line">		private String desc;</div><div class="line"></div><div class="line">		private SerializableProxy(Person s) &#123;</div><div class="line">			this.desc = s.desc;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		/**</div><div class="line">		 * 在这里恢复外围类 注意看这里!!!最大的好处就是我们最后得到的外围类是通过构造器构建的!</div><div class="line">		 *</div><div class="line">		 * @return</div><div class="line">		 */</div><div class="line">		private Object readResolve() &#123;</div><div class="line">			return new Person(desc);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 外围类直接替换成静态内部代理类作为真正的序列化对象</div><div class="line">	 *</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	private Object writeReplace() &#123;</div><div class="line">		return new SerializableProxy(this);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 这里主要是为了防止攻击,任何以Persion声明的对象字节流都是流氓!!</div><div class="line">	 * 因为我在writeReplace中已经把序列化的实例指向了SerializableProxy</div><div class="line">	 *</div><div class="line">	 * @param stream</div><div class="line">	 * @throws InvalidObjectException</div><div class="line">	 */</div><div class="line">	private void readObject(ObjectInputStream stream) throws InvalidObjectException &#123;</div><div class="line">		throw new InvalidObjectException(&quot;proxy requied!&quot;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="自定义Serializable序列化"><a href="#自定义Serializable序列化" class="headerlink" title="自定义Serializable序列化"></a>自定义Serializable序列化</h1><blockquote>
+<p>ObjectOutputStream的defaultWriteObject和defaultReadObject，是通过反射的方式实现序列化和反序列化的。<br>这种默认方式，会导致效率上比Android的Parcelable慢。<br>但是如果通过自己实现writeObject和readObject，那么在效率上会比Parcelable快。<a href="https://bitbucket.org/afrishman/androidserializationtest" target="_blank" rel="external">点击链接，查看测试结果</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line">public class TreeNode implements Serializable, Parcelable &#123;</div><div class="line">    private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">    public List&lt;TreeNode&gt; children;</div><div class="line"></div><div class="line">    public String string0;</div><div class="line">    public String string1;</div><div class="line">    public String string2;</div><div class="line"></div><div class="line">    public int int0;</div><div class="line">    public int int1;</div><div class="line">    public int int2;</div><div class="line"></div><div class="line">    public boolean boolean0;</div><div class="line">    public boolean boolean1;</div><div class="line">    public boolean boolean2;</div><div class="line"></div><div class="line">    public TreeNode() &#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected TreeNode(Parcel in) &#123;</div><div class="line">        if (in.readByte() == 0x01) &#123;</div><div class="line">            children = new ArrayList&lt;TreeNode&gt;();</div><div class="line">            in.readList(children, TreeNode.class.getClassLoader());</div><div class="line">        &#125; else &#123;</div><div class="line">            children = null;</div><div class="line">        &#125;</div><div class="line">        string0 = in.readString();</div><div class="line">        string1 = in.readString();</div><div class="line">        string2 = in.readString();</div><div class="line">        int0 = in.readInt();</div><div class="line">        int1 = in.readInt();</div><div class="line">        int2 = in.readInt();</div><div class="line">        boolean0 = in.readByte() != 0x00;</div><div class="line">        boolean1 = in.readByte() != 0x00;</div><div class="line">        boolean2 = in.readByte() != 0x00;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void writeObject(ObjectOutputStream out) throws IOException &#123;</div><div class="line">        out.writeUTF(string0);</div><div class="line">        out.writeUTF(string1);</div><div class="line">        out.writeUTF(string2);</div><div class="line">        out.writeInt(int0);</div><div class="line">        out.writeInt(int1);</div><div class="line">        out.writeInt(int2);</div><div class="line">        out.writeBoolean(boolean0);</div><div class="line">        out.writeBoolean(boolean1);</div><div class="line">        out.writeBoolean(boolean2);</div><div class="line">        if (children != null) &#123;</div><div class="line">            out.writeInt(children.size());</div><div class="line">            for (TreeNode child : children) &#123;</div><div class="line">                child.writeObject(out);</div><div class="line">            &#125;</div><div class="line">        &#125; else &#123;</div><div class="line">            out.writeInt(0);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException &#123;</div><div class="line">        string0 = in.readUTF();</div><div class="line">        string1 = in.readUTF();</div><div class="line">        string2 = in.readUTF();</div><div class="line">        int0 = in.readInt();</div><div class="line">        int1 = in.readInt();</div><div class="line">        int2 = in.readInt();</div><div class="line">        boolean0 = in.readBoolean();</div><div class="line">        boolean1 = in.readBoolean();</div><div class="line">        boolean2 = in.readBoolean();</div><div class="line">        int childCount = in.readInt();</div><div class="line">        if (childCount &gt; 0) &#123;</div><div class="line">            children = new ArrayList&lt;TreeNode&gt;(childCount);</div><div class="line">            for (int i = 0; i &lt; childCount; i++) &#123;</div><div class="line">                TreeNode child = new TreeNode();</div><div class="line">                child.readObject(in);</div><div class="line">                children.add(child);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        if (children == null) &#123;</div><div class="line">            dest.writeByte((byte) (0x00));</div><div class="line">        &#125; else &#123;</div><div class="line">            dest.writeByte((byte) (0x01));</div><div class="line">            dest.writeList(children);</div><div class="line">        &#125;</div><div class="line">        dest.writeString(string0);</div><div class="line">        dest.writeString(string1);</div><div class="line">        dest.writeString(string2);</div><div class="line">        dest.writeInt(int0);</div><div class="line">        dest.writeInt(int1);</div><div class="line">        dest.writeInt(int2);</div><div class="line">        dest.writeByte((byte) (boolean0 ? 0x01 : 0x00));</div><div class="line">        dest.writeByte((byte) (boolean1 ? 0x01 : 0x00));</div><div class="line">        dest.writeByte((byte) (boolean2 ? 0x01 : 0x00));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static final Parcelable.Creator&lt;TreeNode&gt; CREATOR = new Parcelable.Creator&lt;TreeNode&gt;() &#123;</div><div class="line">        @Override</div><div class="line">        public TreeNode createFromParcel(Parcel in) &#123;</div><div class="line">            return new TreeNode(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public TreeNode[] newArray(int size) &#123;</div><div class="line">            return new TreeNode[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Parcelable/" rel="tag"># Parcelable</a>
+          
+            <a href="/tags/Serializable/" rel="tag"># Serializable</a>
+          
+            <a href="/tags/序列化/" rel="tag"># 序列化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/05/android/2015-4-5-Android-IPC-AIDL/" rel="next" title="Android-IPC-AIDL">
+                <i class="fa fa-chevron-left"></i> Android-IPC-AIDL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/01/designpattern/2016-1-1-DesignPattern-Adapter/" rel="prev" title="DesignPattern-Adapter">
+                DesignPattern-Adapter <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="王亚楠" />
+          <p class="site-author-name" itemprop="name">王亚楠</p>
+           
+              <p class="site-description motion-element" itemprop="description">工作、分享、笔记</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/atopom" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Parcelable接口"><span class="nav-number">1.</span> <span class="nav-text">Parcelable接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现Pacelable接口"><span class="nav-number">2.</span> <span class="nav-text">实现Pacelable接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parcel是什么"><span class="nav-number">3.</span> <span class="nav-text">Parcel是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Parcel的读写源码"><span class="nav-number">3.1.</span> <span class="nav-text">Parcel的读写源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parcel-writeParcelable"><span class="nav-number">3.1.1.</span> <span class="nav-text">Parcel.writeParcelable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parcel-readParcelable"><span class="nav-number">3.1.2.</span> <span class="nav-text">Parcel.readParcelable</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serializable接口"><span class="nav-number">4.</span> <span class="nav-text">Serializable接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#序列化和反序列化中隐藏的方法"><span class="nav-number">5.</span> <span class="nav-text">序列化和反序列化中隐藏的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#private-Object-writeReplace-throws-ObjectStreamException-ObjectOutPutStream"><span class="nav-number">5.1.</span> <span class="nav-text">private Object writeReplace() throws ObjectStreamException ObjectOutPutStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private-void-writeObject-java-io-ObjectOutputStream-out-throws-IOException"><span class="nav-number">5.2.</span> <span class="nav-text">private void writeObject(java.io.ObjectOutputStream out) throws IOException</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private-void-readObject-java-io-ObjectInputStream-in-throws-IOException-ClassNotFoundException"><span class="nav-number">5.3.</span> <span class="nav-text">private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private-Object-readResolve-throws-ObjectStreamException"><span class="nav-number">5.4.</span> <span class="nav-text">private Object readResolve() throws ObjectStreamException</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现Serializable接口"><span class="nav-number">6.</span> <span class="nav-text">实现Serializable接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义Serializable序列化"><span class="nav-number">7.</span> <span class="nav-text">自定义Serializable序列化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王亚楠</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

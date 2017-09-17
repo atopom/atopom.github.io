@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DateType," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="数据类型，是每门开发语言的基本必修课，下面是为自己总结回顾使用的，分享给大家。如有错误请指正，交流学习，共同进步，谢谢～  基本数据类型int类型八进制 以0开头的整型NSLog的格式符：％o 显示的八进制不带前导0％#o 显示的八进制带前导0   十六进制 以0x开头的整型NSLog的格式符：％x 显示的十六进制不带前导0x％#x 显示的十六进制带签到0x％X、％#X 显示的十六进制是大写">
+<meta name="keywords" content="DateType">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Object-C－DataType">
+<meta property="og:url" content="http://yoursite.com/2015/02/12/objectc/2015-2-12-OC-DataType/index.html">
+<meta property="og:site_name" content="Atopom博客">
+<meta property="og:description" content="数据类型，是每门开发语言的基本必修课，下面是为自己总结回顾使用的，分享给大家。如有错误请指正，交流学习，共同进步，谢谢～  基本数据类型int类型八进制 以0开头的整型NSLog的格式符：％o 显示的八进制不带前导0％#o 显示的八进制带前导0   十六进制 以0x开头的整型NSLog的格式符：％x 显示的十六进制不带前导0x％#x 显示的十六进制带签到0x％X、％#X 显示的十六进制是大写">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/OC/OC-Int-NSLog-Format-Character.png">
+<meta property="og:updated_time" content="2017-09-17T11:08:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Object-C－DataType">
+<meta name="twitter:description" content="数据类型，是每门开发语言的基本必修课，下面是为自己总结回顾使用的，分享给大家。如有错误请指正，交流学习，共同进步，谢谢～  基本数据类型int类型八进制 以0开头的整型NSLog的格式符：％o 显示的八进制不带前导0％#o 显示的八进制带前导0   十六进制 以0x开头的整型NSLog的格式符：％x 显示的十六进制不带前导0x％#x 显示的十六进制带签到0x％X、％#X 显示的十六进制是大写">
+<meta name="twitter:image" content="http://yoursite.com/images/OC/OC-Int-NSLog-Format-Character.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/02/12/objectc/2015-2-12-OC-DataType/"/>
+
+
+
+
+
+  <title>Object-C－DataType | Atopom博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Atopom博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/02/12/objectc/2015-2-12-OC-DataType/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王亚楠">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Atopom博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Object-C－DataType</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-12T18:28:37+08:00">
+                2015-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Object-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Object-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>数据类型，是每门开发语言的基本必修课，下面是为自己总结回顾使用的，分享给大家。如有错误请指正，交流学习，共同进步，谢谢～</p>
+</blockquote>
+<h1 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h1><h2 id="int类型"><a href="#int类型" class="headerlink" title="int类型"></a>int类型</h2><p>八进制 以0开头的整型<br>NSLog的格式符：<br>％o 显示的八进制不带前导0<br>％#o 显示的八进制带前导0  </p>
+<p>十六进制 以0x开头的整型<br>NSLog的格式符：<br>％x 显示的十六进制不带前导0x<br>％#x 显示的十六进制带签到0x<br>％X、％#X 显示的十六进制是大写  </p>
+<h2 id="float类型"><a href="#float类型" class="headerlink" title="float类型"></a>float类型</h2><p>NSLog的格式符：％f<br>％e 科学技术法显示值<br>％g 指数的值小于-4 大 于5，采用％e，否则采用％f  </p>
+<p>十六进制的浮点常量包含前导 0x 或 0X，后面紧跟一个或多个十进制或十六进制数字，再后是 p 或 P，最后是可以带符号的二进制指数。<br>例:0x0.3p10 表示的值为 3/16*2^10<br>注:若无特殊说明，Object-c 将所有的浮点常量看做 double 值，要显示 double 值可使用和 float 一样的格式符。  </p>
+<h2 id="char类型"><a href="#char类型" class="headerlink" title="char类型"></a>char类型</h2><p>NSLog的格式符:%c<br>long double 常量写成尾部带有字母 l 或者 L 的浮点常量。1.234e+7L  </p>
+<p><img src="/images/OC/OC-Int-NSLog-Format-Character.png" alt=""></p>
+<p>注:id类型可以通过类型转化符可以将一般的id类型的对象转换成特定的对象。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">_Bool 处理 Boolean(即 0 或 1)  </div><div class="line">_Complex 处理复数  </div><div class="line">_Imaginary 处理抽象数字</div></pre></td></tr></table></figure>
+<p>实例变量的初始化值默认为 0<br>实例变量作用域的指令:<br>@private 实例变量可被定义在该类的方法直接访问，不能被子类定义的方法直接访问。<br>@package 对于 64 位图像，可以在实现该类的图像的任何地方访问这个实例变量。<br>@protected 实例变量可被该类及任何子类中定义的方法直接访问(默认的情况)。<br>@public 实例变量可被该类中定义的方法直接访问，也可被其他类或模块中定义的方法访问。使得其他方法或函数可以通过(-&gt;)来访问实例变量(不推荐用)。  </p>
+<p>在类中定义静态变量<br>说明符voaltile和const正好相反，明确告诉编译器，指定类型变量的值会改变。(I/O端口)<br>比如要将输出端口的地址存储在 outPort 的变量中。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">volatile char *outPort;  </div><div class="line">*outPort = &apos;O&apos;;  </div><div class="line">*outPort = &apos;N&apos;;</div></pre></td></tr></table></figure>
+<p>这样就可以避免编译器将第一个赋值语句从程序中删除。  </p>
+<h2 id="BOOL类型"><a href="#BOOL类型" class="headerlink" title="BOOL类型"></a>BOOL类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">typedef signed char BOOL;</div><div class="line">#define YES (BOOL)1;</div><div class="line">#define NO (BOOL)0;</div></pre></td></tr></table></figure>
+<h1 id="nil空类型"><a href="#nil空类型" class="headerlink" title="nil空类型"></a>nil空类型</h1><p>也就是C中的NULL，也就是0;  </p>
+<h1 id="NSNumber类型"><a href="#NSNumber类型" class="headerlink" title="NSNumber类型"></a>NSNumber类型</h1><p>可以使用对象来封装基本数值。<br>NSNumber 类来包装基本数据类型。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ (NSNumber *)numberWithChar :(char)value;</div><div class="line">+ (NSNumber *)numberWithInt :(int)value;</div><div class="line">+ (NSNumber *)numberWithFloat :(float)value;</div><div class="line">+ (NSNumber *)numberWithBool :(BOOL)value;</div></pre></td></tr></table></figure>
+<p>还有包括无符号版本和各种 long 型数据及 long long 整型数据<br>例如:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSNumber *number = [NSNumber numberWithInt :42];</div></pre></td></tr></table></figure>
+<p>将一个基本类型封装到 NSNumber 后,可以使用下列方法重新获得:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (char)charValue;</div><div class="line">- (int)intValue;</div><div class="line">- (float)floatValue;</div><div class="line">- (BOOL)boolValue;</div><div class="line">- (NSString *)stringValue;</div></pre></td></tr></table></figure>
+<h1 id="NSValue类型"><a href="#NSValue类型" class="headerlink" title="NSValue类型"></a>NSValue类型</h1><p>NSNumber 实际上是 NSValue的子类, NSValue可以封装任意值。可以用NSValue将结构放入 NSArray 和 NSDictionary 中。  </p>
+<p>创建新的 NSValue:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+(NSValue*)valueWithBytes:(const void *) value objCType:(const char *)type;</div></pre></td></tr></table></figure>
+<p>@encode 编译器指令可以接受数据类型的名称并为你生成合适的字符串。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSRect rect = NSMakeRect(1,2,30,40);</div><div class="line">NSValue *value;</div><div class="line">value = [NSValuevalueWithBytes:&amp;rect objCType:@encode(NSRect)];</div></pre></td></tr></table></figure>
+<p>使用getValue:来提取数值 (传递的是要存储这个数值的变量的地址)(先找地址再取值)  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">value = [array objectAtIndex : 0];</div><div class="line">[value getValue:&amp;rect];</div></pre></td></tr></table></figure>
+<p>注:Cocoa 提供了将常用的 struct 型数据转化成 NSValue 的便捷方法:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+ (NSValue*)valueWithPoint:(NSPoint)point;</div><div class="line">+ (NSValue*)valueWithSize:(NSSize)size;</div><div class="line">+ (NSValue*)valueWithRect:(NSRect)rect;</div><div class="line">- (NSSize)sizeValue;</div><div class="line">- (NSRect)rectValue;</div><div class="line">- (NSPoint)pointValue;</div></pre></td></tr></table></figure>
+<h1 id="NSNull类型"><a href="#NSNull类型" class="headerlink" title="NSNull类型"></a>NSNull类型</h1><p>在关键字下如果属性是NSNull表明没有这个属性，没有数值的话表明不知道是否有这个属性。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[NSNull null] //总返回一样的值</div><div class="line">+ (NSNull *)null;</div></pre></td></tr></table></figure>
+<p>例如:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[contast setObject:[NSNull null] forKey:@&quot;home&quot;];</div></pre></td></tr></table></figure>
+<p>访问它:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">id home = [contast objectForKey:@&quot;home&quot;];</div><div class="line">if (home==[NSNullnull])&#123;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="NSFileManager类型"><a href="#NSFileManager类型" class="headerlink" title="NSFileManager类型"></a>NSFileManager类型</h1><p>允许对文件系统进行操作(创建目录、删除文件、移动文件或获取文件信息)<br>创建一个属于自己的 NSFileManager 对象  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSFileManager *manager = [NSFileManager defaultManager] ;</div></pre></td></tr></table></figure>
+<p>将代字符‘~’替换成主目录  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSString *home = [@&quot;~&quot; stringByExpandingTildeInPath];</div><div class="line">//输出文件的扩展名</div><div class="line">- (NSString*) pathExtension</div></pre></td></tr></table></figure>
+<p>示例:翻查主目录,查找.jpg 文件并输出找到的文件列表  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line">int main (int argc, const char* argv[]) &#123;</div><div class="line">	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">	NSFileManager *manager;</div><div class="line">	manager = [NSFileManager defaultManager];</div><div class="line">	NSString *home;</div><div class="line">	home = [@&quot;~&quot; stringByExpandingTildeInPath];</div><div class="line">	NSDirectoryEnumerator *direnum;</div><div class="line">	direnum = [manager enumeratorAtPath: home];</div><div class="line">	NSMutableArray *files;</div><div class="line">	files = [NSMutableArray arrayWithCapacity:100];</div><div class="line">	NSString *filename;</div><div class="line">	while (filename = [direnum nextObject]) &#123;</div><div class="line">		if ([[filename pathExtension] isEqualTo:@&quot;jpg&quot;]) &#123;</div><div class="line">			[files addObject: filename];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	NSEnumerator *fileenum;</div><div class="line">	fileenum = [files objectEnumerator];</div><div class="line">	while (filename = [fileenum nextObject]) &#123;</div><div class="line">		NSLog (@&quot;%@&quot;, filename);</div><div class="line">	&#125;</div><div class="line">	[pool drain];</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DateType/" rel="tag"># DateType</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/02/07/2015-2-7-Xcode-Program-Common-ShortcutKey/" rel="next" title="Xcode常用快捷键">
+                <i class="fa fa-chevron-left"></i> Xcode常用快捷键
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/12/android/2015-3-12-Android-IPC-Messenger/" rel="prev" title="Android-IPC-Messenger">
+                Android-IPC-Messenger <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="王亚楠" />
+          <p class="site-author-name" itemprop="name">王亚楠</p>
+           
+              <p class="site-description motion-element" itemprop="description">工作、分享、笔记</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/atopom" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本数据类型"><span class="nav-number">1.</span> <span class="nav-text">基本数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#int类型"><span class="nav-number">1.1.</span> <span class="nav-text">int类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#float类型"><span class="nav-number">1.2.</span> <span class="nav-text">float类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#char类型"><span class="nav-number">1.3.</span> <span class="nav-text">char类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BOOL类型"><span class="nav-number">1.4.</span> <span class="nav-text">BOOL类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nil空类型"><span class="nav-number">2.</span> <span class="nav-text">nil空类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSNumber类型"><span class="nav-number">3.</span> <span class="nav-text">NSNumber类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSValue类型"><span class="nav-number">4.</span> <span class="nav-text">NSValue类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSNull类型"><span class="nav-number">5.</span> <span class="nav-text">NSNull类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSFileManager类型"><span class="nav-number">6.</span> <span class="nav-text">NSFileManager类型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王亚楠</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

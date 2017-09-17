@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="IPC,AIDL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一、AIDL是什么 AIDL全称是Android Interface Definition Language，也就是Android接口定义语言。  二、AIDL是干什么的 设计这门语言的目的是为了实现进程间通信，尤其是在涉及多进程并发情况下的进程间通信。  Android中其他进程间通信的方式 Bundle、文件共享、、ContentProvider、Socket、BroadcastReceive">
+<meta name="keywords" content="IPC,AIDL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-IPC-AIDL">
+<meta property="og:url" content="http://yoursite.com/2015/04/05/android/2015-4-5-Android-IPC-AIDL/index.html">
+<meta property="og:site_name" content="Atopom博客">
+<meta property="og:description" content="一、AIDL是什么 AIDL全称是Android Interface Definition Language，也就是Android接口定义语言。  二、AIDL是干什么的 设计这门语言的目的是为了实现进程间通信，尤其是在涉及多进程并发情况下的进程间通信。  Android中其他进程间通信的方式 Bundle、文件共享、、ContentProvider、Socket、BroadcastReceive">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/Android/Binder_Work_Mechanism.png">
+<meta property="og:image" content="http://yoursite.com/images/Android/AIDL_Class_Diagram.png">
+<meta property="og:updated_time" content="2017-09-17T11:08:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-IPC-AIDL">
+<meta name="twitter:description" content="一、AIDL是什么 AIDL全称是Android Interface Definition Language，也就是Android接口定义语言。  二、AIDL是干什么的 设计这门语言的目的是为了实现进程间通信，尤其是在涉及多进程并发情况下的进程间通信。  Android中其他进程间通信的方式 Bundle、文件共享、、ContentProvider、Socket、BroadcastReceive">
+<meta name="twitter:image" content="http://yoursite.com/images/Android/Binder_Work_Mechanism.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/04/05/android/2015-4-5-Android-IPC-AIDL/"/>
+
+
+
+
+
+  <title>Android-IPC-AIDL | Atopom博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Atopom博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/05/android/2015-4-5-Android-IPC-AIDL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王亚楠">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Atopom博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android-IPC-AIDL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-05T14:57:20+08:00">
+                2015-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、AIDL是什么"><a href="#一、AIDL是什么" class="headerlink" title="一、AIDL是什么"></a>一、AIDL是什么</h1><blockquote>
+<p>AIDL全称是Android Interface Definition Language，也就是Android接口定义语言。</p>
+</blockquote>
+<h1 id="二、AIDL是干什么的"><a href="#二、AIDL是干什么的" class="headerlink" title="二、AIDL是干什么的"></a>二、AIDL是干什么的</h1><blockquote>
+<p>设计这门语言的目的是为了实现进程间通信，尤其是在涉及多进程并发情况下的进程间通信。</p>
+</blockquote>
+<h2 id="Android中其他进程间通信的方式"><a href="#Android中其他进程间通信的方式" class="headerlink" title="Android中其他进程间通信的方式"></a>Android中其他进程间通信的方式</h2><blockquote>
+<p>Bundle、文件共享、、ContentProvider、Socket、BroadcastReceiver，每种方式都有自己的特点，这里不做过多的扩展。</p>
+</blockquote>
+<h1 id="三、AIDL怎么用"><a href="#三、AIDL怎么用" class="headerlink" title="三、AIDL怎么用"></a>三、AIDL怎么用</h1><h2 id="1、AIDL语法"><a href="#1、AIDL语法" class="headerlink" title="1、AIDL语法"></a>1、AIDL语法</h2><h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>用AIDL书写的文件的后缀是 .aidl。</p>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><ol>
+<li>基本数据类型（byte，short，int，long，float，double，boolean，char）</li>
+<li>String 和 CharSequence</li>
+<li>List：只支持ArrayList，里面每个元素都必须能被AIDL支持</li>
+<li>Map：只支持HashMap，里面的Key和Value都必须能被AIDL支持</li>
+<li>Parcelable：所有实现Parcelable接口的对象</li>
+<li>AIDL：所有的AIDL接口本身也可以在AIDL文件中使用</li>
+</ol>
+<blockquote>
+<p>注意：<br>在编写AIDL文件时，自定义的Parcelable对象必须显示 import ，不管它是否和当前AIDL文件位于同一个包内。<br>比如，现在我们编写了两个文件，一个叫做 Book.java ，另一个叫做 BookManager.aidl，它们都在 com.wangyanan.aidldemo 包下。现在我们需要在 .aidl 文件里使用 Book 对象，那么我们就必须在 .aidl 文件里面写上 import com.wangyanan.aidldemo.Book 。</p>
+</blockquote>
+<h3 id="定向tag"><a href="#定向tag" class="headerlink" title="定向tag"></a>定向tag</h3><p>AIDL中的定向 tag 表示了在跨进程通信中数据的流向，其中 in 表示数据只能由客户端流向服务端， out 表示数据只能由服务端流向客户端，而 inout 则表示数据可在服务端与客户端之间双向流通。</p>
+<p>其中，数据流向是针对在客户端中的那个传入方法的对象而言的。<br>in 为定向 tag 的话表现为服务端将会接收到一个那个对象的完整数据，但是客户端的那个对象不会因为服务端对传参的修改而发生变动；<br>out 的话表现为服务端将会接收到那个对象的的空对象，但是在服务端对接收到的空对象有任何修改之后客户端将会同步变动；<br>inout 为定向 tag 的情况下，服务端将会接收到客户端传来对象的完整信息，并且客户端将会同步服务端对该对象的任何变动。</p>
+<h2 id="2、具体操作"><a href="#2、具体操作" class="headerlink" title="2、具体操作"></a>2、具体操作</h2><h3 id="AIDL代码"><a href="#AIDL代码" class="headerlink" title="AIDL代码"></a>AIDL代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">// Book.java</div><div class="line"></div><div class="line">package com.gn100.ipcserver.aidl;</div><div class="line"></div><div class="line">import android.os.Parcel;</div><div class="line">import android.os.Parcelable;</div><div class="line"></div><div class="line">public class Book implements Parcelable &#123;</div><div class="line"></div><div class="line">    private String name;</div><div class="line">    private int price;</div><div class="line"></div><div class="line">    public String getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public int getPrice() &#123;</div><div class="line">        return price;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setPrice(int price) &#123;</div><div class="line">        this.price = price;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Book() &#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected Book(Parcel in) &#123;</div><div class="line">        name = in.readString();</div><div class="line">        price = in.readInt();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static final Creator&lt;Book&gt; CREATOR = new Creator&lt;Book&gt;() &#123;</div><div class="line">        @Override</div><div class="line">        public Book createFromParcel(Parcel in) &#123;</div><div class="line">            return new Book(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Book[] newArray(int size) &#123;</div><div class="line">            return new Book[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeInt(price);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void readFromParcel(Parcel dest) &#123;</div><div class="line">        name = dest.readString();</div><div class="line">        price = dest.readInt();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String toString() &#123;</div><div class="line">        return &quot;name : &quot; + name + &quot; , price : &quot; + price;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// Book.aidl</div><div class="line"></div><div class="line">//第一类AIDL文件的例子</div><div class="line">//这个文件的作用是引入了一个序列化对象 Book 供其他的AIDL文件使用</div><div class="line">//注意：Book.aidl与Book.java的包名应当是一样的</div><div class="line">package com.gn100.ipcserver.aidl;</div><div class="line"></div><div class="line">//注意parcelable是小写</div><div class="line">parcelable Book;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">// BookManager.aidl</div><div class="line"></div><div class="line">package com.gn100.ipcserver.aidl;</div><div class="line">import com.gn100.ipcserver.aidl.Book;</div><div class="line">import com.gn100.ipcserver.aidl.OnNewBookArrivedListener;</div><div class="line"></div><div class="line">interface BookManager &#123;</div><div class="line">    // 所有的返回值前都不需要加任何东西</div><div class="line">    List&lt;Book&gt; getBooks();</div><div class="line">    Book getBook(String name);</div><div class="line">    int getBookCount();</div><div class="line"></div><div class="line">    // 传参时除了Java基本类型以及String，CharSequence之外的类型</div><div class="line">    // 都需要在前面加上定向tag，具体加什么根据需求而定</div><div class="line">    void addBookIn(in Book book);</div><div class="line">    void addBookOut(out Book book);</div><div class="line">    void addBookInout(inout Book book);</div><div class="line"></div><div class="line">    void registerListener(OnNewBookArrivedListener listener);</div><div class="line">    void unregisterListener(OnNewBookArrivedListener listener);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意：这里有一个坑！大家可能注意到了，在 Book.aidl 文件中，我一直在强调：Book.aidl与Book.java的包名应当是一样的。这似乎理所当然的意味着这两个文件应当是在同一个包里面的——事实上，很多比较老的文章里就是这样说的，他们说最好都在 aidl 包里同一个包下，方便移植——然而在 Android Studio 里并不是这样。如果这样做的话，系统根本就找不到 Book.java 文件，从而在其他的AIDL文件里面使用 Book 对象的时候会报 Symbol not found 的错误。为什么会这样呢？因为 Gradle 。Android Studio 是默认使用 Gradle 来构建 Android 项目的，而 Gradle 在构建项目的时候会通过 sourceSets 来配置不同文件的访问路径，从而加快查找速度。Gradle 默认是将 java 代码的访问路径设置在 java 包下的，这样一来，如果 java 文件是放在 aidl 包下的话那么理所当然系统是找不到这个 java 文件的。那应该怎么办呢？</p>
+<p>即要 java 文件和 aidl 文件的包名是一样的，又要能找到这个 java 文件——那么仔细想一下的话，其实解决方法是很显而易见的。首先我们可以把问题转化成：如何在保证两个文件包名一样的情况下，让系统能够找到我们的 java 文件？这样一来思路就很明确了：要么让系统来 aidl 包里面来找 java 文件，要么把 java 文件放到系统能找到的地方去，也即放到 java 包里面去。</p>
+<blockquote>
+<p>方法一<br>修改 build.gradle 文件：在 android{} 中间加上下面的内容。<br>也就是把 java 代码的访问路径设置成了 java 包和 aidl 包，这样一来系统就会到 aidl 包里面去查找 java 文件，也就达到了我们的目的。只是有一点，这样设置后 Android Studio 中的项目目录会有一些改变，我感觉改得挺难看的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sourceSets &#123;</div><div class="line">    main &#123;</div><div class="line">        java.srcDirs = [&apos;src/main/java&apos;, &apos;src/main/aidl&apos;]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>方法二<br>把 java 文件放到 java 包下去：把 Book.java 放到 java 包里任意一个包下，保持其包名不变，与 Book.aidl 一致。只要它的包名不变，Book.aidl 就能找到 Book.java ，而只要 Book.java 在 java 包下，那么系统也是能找到它的。但是这样做的话也有一个问题，就是在移植相关 .aidl 文件和 .java 文件的时候没那么方便，不能直接把整个 aidl 文件夹拿过去完事儿了，还要单独将 .java 文件放到 java 文件夹里去。</p>
+</blockquote>
+<h3 id="服务端代码"><a href="#服务端代码" class="headerlink" title="服务端代码"></a>服务端代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div></pre></td><td class="code"><pre><div class="line">// AIDLService.java</div><div class="line"></div><div class="line">package com.gn100.ipcserver.service;</div><div class="line"></div><div class="line">import android.app.Service;</div><div class="line">import android.content.Intent;</div><div class="line">import android.os.IBinder;</div><div class="line">import android.os.RemoteCallbackList;</div><div class="line">import android.os.RemoteException;</div><div class="line">import android.support.annotation.Nullable;</div><div class="line">import android.text.TextUtils;</div><div class="line">import android.util.Log;</div><div class="line"></div><div class="line">import com.gn100.ipcserver.aidl.Book;</div><div class="line">import com.gn100.ipcserver.aidl.BookManager;</div><div class="line">import com.gn100.ipcserver.aidl.OnNewBookArrivedListener;</div><div class="line"></div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import java.util.concurrent.CopyOnWriteArrayList;</div><div class="line">import java.util.concurrent.atomic.AtomicBoolean;</div><div class="line"></div><div class="line">public class AIDLService extends Service &#123;</div><div class="line"></div><div class="line">    private static final String TAG = AIDLService.class.getCanonicalName();</div><div class="line"></div><div class="line">    private AtomicBoolean mIsServiceDestoryed = new AtomicBoolean(false);</div><div class="line">    private List&lt;Book&gt; mBooks = new CopyOnWriteArrayList&lt;&gt;();</div><div class="line">    private RemoteCallbackList&lt;OnNewBookArrivedListener&gt; mNewBookArrivedListeners = new RemoteCallbackList&lt;OnNewBookArrivedListener&gt;();</div><div class="line"></div><div class="line">    private BookManager.Stub mBookManager = new BookManager.Stub() &#123;</div><div class="line">        @Override</div><div class="line">        public List&lt;Book&gt; getBooks() throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                Log.e(TAG, &quot;invoking getBooks() method , now the list is : &quot; + mBooks.toString());</div><div class="line">                return mBooks != null ? mBooks : new ArrayList&lt;Book&gt;();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Book getBook(String name) throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                Book book = null;</div><div class="line">                if (mBooks != null &amp;&amp; !TextUtils.isEmpty(name)) &#123;</div><div class="line">                    for (Book b : mBooks) &#123;</div><div class="line">                        if (name.equals(b.getName())) &#123;</div><div class="line">                            book = b;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                Log.e(TAG, &quot;invoking getBook() method , now the book is : &quot; + book.toString());</div><div class="line">                return book;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public int getBookCount() throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                Log.e(TAG, &quot;invoking getBookCount() method , now the bookCount is : &quot; + mBooks.size());</div><div class="line">                return mBooks == null ? 0 : mBooks.size();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void addBookIn(Book book) throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                if (mBooks == null) &#123;</div><div class="line">                    mBooks = new ArrayList&lt;&gt;();</div><div class="line">                &#125;</div><div class="line">                if (book == null) &#123;</div><div class="line">                    Log.e(TAG, &quot;Book is null in In&quot;);</div><div class="line">                    book = new Book();</div><div class="line">                &#125;</div><div class="line">                //尝试修改book的参数，主要是为了观察其到客户端的反馈</div><div class="line">                book.setPrice(11111);</div><div class="line">                if (!mBooks.contains(book)) &#123;</div><div class="line">                    mBooks.add(book);</div><div class="line">                &#125;</div><div class="line">                //打印mBooks列表，观察客户端传过来的值</div><div class="line">                Log.e(TAG, &quot;invoking addBookIn() method , now the list is : &quot; + mBooks.toString());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void addBookOut(Book book) throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                if (mBooks == null) &#123;</div><div class="line">                    mBooks = new ArrayList&lt;&gt;();</div><div class="line">                &#125;</div><div class="line">                if (book == null) &#123;</div><div class="line">                    Log.e(TAG, &quot;Book is null in Out&quot;);</div><div class="line">                    book = new Book();</div><div class="line">                &#125;</div><div class="line">                //尝试修改book的参数，主要是为了观察其到客户端的反馈</div><div class="line">                book.setPrice(22222);</div><div class="line">                if (!mBooks.contains(book)) &#123;</div><div class="line">                    mBooks.add(book);</div><div class="line">                &#125;</div><div class="line">                //打印mBooks列表，观察客户端传过来的值</div><div class="line">                Log.e(TAG, &quot;invoking addBookOut() method , now the list is : &quot; + mBooks.toString());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void addBookInout(Book book) throws RemoteException &#123;</div><div class="line">            synchronized (this) &#123;</div><div class="line">                if (mBooks == null) &#123;</div><div class="line">                    mBooks = new ArrayList&lt;&gt;();</div><div class="line">                &#125;</div><div class="line">                if (book == null) &#123;</div><div class="line">                    Log.e(TAG, &quot;Book is null in Inout&quot;);</div><div class="line">                    book = new Book();</div><div class="line">                &#125;</div><div class="line">                //尝试修改book的参数，主要是为了观察其到客户端的反馈</div><div class="line">                book.setPrice(33333);</div><div class="line">                if (!mBooks.contains(book)) &#123;</div><div class="line">                    mBooks.add(book);</div><div class="line">                &#125;</div><div class="line">                //打印mBooks列表，观察客户端传过来的值</div><div class="line">                Log.e(TAG, &quot;invoking addBookInout() method , now the list is : &quot; + mBooks.toString());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void registerListener(OnNewBookArrivedListener listener) throws RemoteException &#123;</div><div class="line">            boolean success = mNewBookArrivedListeners.register(listener);</div><div class="line">            if(success) &#123;</div><div class="line">                Log.d(TAG, &quot;register success&quot;);</div><div class="line">            &#125; else &#123;</div><div class="line">                Log.e(TAG, &quot;not found, can not register&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void unregisterListener(OnNewBookArrivedListener listener) throws RemoteException &#123;</div><div class="line">            boolean success = mNewBookArrivedListeners.unregister(listener);</div><div class="line">            if(success) &#123;</div><div class="line">                Log.d(TAG, &quot;unregister success&quot;);</div><div class="line">            &#125; else &#123;</div><div class="line">                Log.e(TAG, &quot;not found, can not unregister&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    @Nullable</div><div class="line">    @Override</div><div class="line">    public IBinder onBind(Intent intent) &#123;</div><div class="line">        Log.d(TAG, &quot;onBind&quot;);</div><div class="line">        return mBookManager.asBinder();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean onUnbind(Intent intent) &#123;</div><div class="line">        Log.d(TAG, &quot;onUnbind&quot;);</div><div class="line">//        return super.onUnbind(intent);</div><div class="line">        return true; // for invoke onRebind method</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onRebind(Intent intent) &#123;</div><div class="line">        Log.d(TAG, &quot;onRebind&quot;);</div><div class="line">        super.onRebind(intent);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        Log.d(TAG, &quot;onCreate&quot;);</div><div class="line">        super.onCreate();</div><div class="line">        new Thread(new ServiceWorker()).start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int onStartCommand(Intent intent, int flags, int startId) &#123;</div><div class="line">        Log.d(TAG, &quot;onStartCommand&quot;);</div><div class="line">        return super.onStartCommand(intent, flags, startId);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onDestroy() &#123;</div><div class="line">        Log.d(TAG, &quot;onDestroy&quot;);</div><div class="line">        super.onDestroy();</div><div class="line">        mIsServiceDestoryed.set(true);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void onNewBookArrived(Book book) throws RemoteException &#123;</div><div class="line">        Log.d(TAG, &quot;onNewBookArrived&quot;);</div><div class="line">        mBooks.add(book);</div><div class="line">        final int N = mNewBookArrivedListeners.beginBroadcast();</div><div class="line">        for (int i = 0; i &lt; N; i++) &#123;</div><div class="line">            OnNewBookArrivedListener l = mNewBookArrivedListeners.getBroadcastItem(i);</div><div class="line">            if (l != null) &#123;</div><div class="line">                try &#123;</div><div class="line">                    l.onNewBookArrived(book);</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        mNewBookArrivedListeners.finishBroadcast();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private class ServiceWorker implements Runnable &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            // do background processing here.....</div><div class="line">            while (!mIsServiceDestoryed.get()) &#123;</div><div class="line">                try &#123;</div><div class="line">                    Thread.sleep(5000);</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">                int bookId = mBooks.size() + 1;</div><div class="line">                Book newBook = new Book();</div><div class="line">                newBook.setName(&quot;newBook#&quot; + bookId);</div><div class="line">                newBook.setPrice(100);</div><div class="line">                try &#123;</div><div class="line">                    onNewBookArrived(newBook);</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>AIDLService是服务端代码，大致可以分为三块：第一块是初始化，在 onCreate() 方法里面我进行了一些数据的初始化操作。第二块是重写 BookManager.Stub 中的方法（在这里面实现AIDL里面定义的方法接口的具体实现逻辑）。第三块是重写 onBind() 方法，在里面返回写好的 BookManager.Stub 。</p>
+</blockquote>
+<p>接下来在 Manefest 文件里面注册这个我们写好的 Service ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;service</div><div class="line">    android:name=&quot;.service.AIDLService&quot;</div><div class="line">    android:exported=&quot;true&quot;&gt;</div><div class="line">        &lt;intent-filter&gt;</div><div class="line">            &lt;action android:name=&quot;com.gn100.aidl&quot;/&gt;</div><div class="line">            &lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;</div><div class="line">        &lt;/intent-filter&gt;</div><div class="line">&lt;/service&gt;</div></pre></td></tr></table></figure>
+<h3 id="客户端代码"><a href="#客户端代码" class="headerlink" title="客户端代码"></a>客户端代码</h3><p>前面说过，在客户端我们要完成的工作主要是调用服务端的方法，但是在那之前，我们首先要连接上服务端，完整的客户端代码是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div></pre></td><td class="code"><pre><div class="line">// AIDLActivity.java</div><div class="line"></div><div class="line">package com.gn100.ipcclient;</div><div class="line"></div><div class="line">import android.content.ComponentName;</div><div class="line">import android.content.Intent;</div><div class="line">import android.content.ServiceConnection;</div><div class="line">import android.os.Bundle;</div><div class="line">import android.os.Handler;</div><div class="line">import android.os.IBinder;</div><div class="line">import android.os.Message;</div><div class="line">import android.os.RemoteException;</div><div class="line">import android.support.v7.app.AppCompatActivity;</div><div class="line">import android.util.Log;</div><div class="line">import android.view.View;</div><div class="line"></div><div class="line">import com.gn100.ipcserver.aidl.Book;</div><div class="line">import com.gn100.ipcserver.aidl.BookManager;</div><div class="line">import com.gn100.ipcserver.aidl.OnNewBookArrivedListener;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class AIDLActivity extends AppCompatActivity implements View.OnClickListener &#123;</div><div class="line"></div><div class="line">    private static final String TAG = AIDLActivity.class.getCanonicalName();</div><div class="line"></div><div class="line">    private BookManager mBookManager;</div><div class="line"></div><div class="line">    private static final int MESSAGE_NEW_BOOK_ARRIVED = 1;</div><div class="line">    private Handler mHandler = new Handler() &#123;</div><div class="line">        @Override</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case MESSAGE_NEW_BOOK_ARRIVED:</div><div class="line">                    Log.d(TAG, &quot;receive new book :&quot; + msg.obj);</div><div class="line">                    break;</div><div class="line">                default:</div><div class="line">                    super.handleMessage(msg);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    private OnNewBookArrivedListener mOnNewBookArrivedListener = new OnNewBookArrivedListener.Stub() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onNewBookArrived(Book newBook) throws RemoteException &#123;</div><div class="line">            mHandler.obtainMessage(MESSAGE_NEW_BOOK_ARRIVED, newBook)</div><div class="line">                    .sendToTarget();</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() &#123;</div><div class="line">        @Override</div><div class="line">        public void binderDied() &#123;</div><div class="line">            Log.d(TAG, &quot;binder died. tname:&quot; + Thread.currentThread().getName());</div><div class="line">            if (mBookManager == null)</div><div class="line">                return;</div><div class="line">            mBookManager.asBinder().unlinkToDeath(mDeathRecipient, 0);</div><div class="line">            mBookManager = null;</div><div class="line">            // TODO:这里重新绑定远程Service</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    private ServiceConnection mServiceConnection = new ServiceConnection() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</div><div class="line">            Log.d(TAG, &quot;onServiceConnected&quot;);</div><div class="line">            mBookManager = BookManager.Stub.asInterface(service);</div><div class="line">            try &#123;</div><div class="line">                Log.i(TAG, &quot;register listener:&quot; + mOnNewBookArrivedListener);</div><div class="line">                mBookManager.registerListener(mOnNewBookArrivedListener);</div><div class="line">                mBookManager.asBinder().linkToDeath(mDeathRecipient, 0);</div><div class="line">            &#125; catch (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceDisconnected(ComponentName name) &#123;</div><div class="line">            Log.d(TAG, &quot;onServiceDisconnected. tname:&quot; + Thread.currentThread().getName());</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onStart() &#123;</div><div class="line">        super.onStart();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onStop() &#123;</div><div class="line">        super.onStop();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onDestroy() &#123;</div><div class="line">        super.onDestroy();</div><div class="line">        if (mBookManager != null</div><div class="line">                &amp;&amp; mBookManager.asBinder().isBinderAlive()) &#123;</div><div class="line">            try &#123;</div><div class="line">                Log.i(TAG, &quot;unregister listener:&quot; + mOnNewBookArrivedListener);</div><div class="line">                mBookManager.unregisterListener(mOnNewBookArrivedListener);</div><div class="line">                unbindService(mServiceConnection);</div><div class="line">            &#125; catch (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_aidl_service);</div><div class="line"></div><div class="line">        findViewById(R.id.btn_add_book_in).setOnClickListener(this);</div><div class="line">        findViewById(R.id.btn_add_book_out).setOnClickListener(this);</div><div class="line">        findViewById(R.id.btn_add_book_in_out).setOnClickListener(this);</div><div class="line">        findViewById(R.id.btn_get_books).setOnClickListener(this);</div><div class="line"></div><div class="line">        bindService();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onClick(View v) &#123;</div><div class="line">        switch (v.getId()) &#123;</div><div class="line">            case R.id.btn_add_book_in:</div><div class="line">                addBookIn();</div><div class="line">                break;</div><div class="line">            case R.id.btn_add_book_out:</div><div class="line">                addBookOut();</div><div class="line">                break;</div><div class="line">            case R.id.btn_add_book_in_out:</div><div class="line">                addBookInout();</div><div class="line">                break;</div><div class="line">            case R.id.btn_get_books:</div><div class="line">                getBooks();</div><div class="line">                break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void addBookIn() &#123;</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    Book book = new Book();</div><div class="line">                    book.setName(&quot;Android築基篇&quot;);</div><div class="line">                    book.setPrice(199);</div><div class="line">                    Log.d(TAG, &quot;book info addBookIn before : &quot; + book);</div><div class="line">                    mBookManager.addBookIn(book);</div><div class="line">                    Log.d(TAG, &quot;book info addBookIn after : &quot; + book);</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;).start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void addBookOut() &#123;</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                Book book = new Book();</div><div class="line">                book.setName(&quot;Android築基篇&quot;);</div><div class="line">                book.setPrice(199);</div><div class="line">                try &#123;</div><div class="line">                    Log.d(TAG, &quot;book info addBookOut before : &quot; + book);</div><div class="line">                    mBookManager.addBookOut(book);</div><div class="line">                    Log.d(TAG, &quot;book info addBookOut after : &quot; + book);</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void addBookInout() &#123;</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                Book book = new Book();</div><div class="line">                book.setName(&quot;Android築基篇&quot;);</div><div class="line">                book.setPrice(199);</div><div class="line">                try &#123;</div><div class="line">                    Log.d(TAG, &quot;book info addBookInout before : &quot; + book);</div><div class="line">                    mBookManager.addBookInout(book);</div><div class="line">                    Log.d(TAG, &quot;book info addBookInout after : &quot; + book);</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void getBooks() &#123;</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    List&lt;Book&gt; books = mBookManager.getBooks();</div><div class="line">                    Log.d(TAG, &quot;books info = &quot; + books.toString());</div><div class="line">                &#125; catch (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void bindService() &#123;</div><div class="line">        Intent intent = new Intent();</div><div class="line">        intent.setAction(&quot;com.gn100.aidl&quot;);</div><div class="line">        intent.setPackage(&quot;com.gn100.ipcserver&quot;);</div><div class="line">        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>AIDLActivity 是客户端代码，首先bindService建立连接，然后在 ServiceConnection 里面获取 BookManager 对象，接着通过它来调用服务端的方法。</p>
+</blockquote>
+<h2 id="3、注意事项"><a href="#3、注意事项" class="headerlink" title="3、注意事项"></a>3、注意事项</h2><ol>
+<li>在使用AIDL进行跨进程通信时，在调用远程进程方法时，尽量在子线程处理，避免远程进程方法做了耗时操作，阻塞自己的UI线程。</li>
+<li>服务端需要处理并发问题。</li>
+</ol>
+<h1 id="四、AIDL工作原理"><a href="#四、AIDL工作原理" class="headerlink" title="四、AIDL工作原理"></a>四、AIDL工作原理</h1><p><img src="/images/Android/Binder_Work_Mechanism.png" alt="AIDL工作原理"></p>
+<h1 id="五、AIDL结构类图"><a href="#五、AIDL结构类图" class="headerlink" title="五、AIDL结构类图"></a>五、AIDL结构类图</h1><p><img src="/images/Android/AIDL_Class_Diagram.png" alt="AIDL结构类图"></p>
+<h1 id="代码地址"><a href="#代码地址" class="headerlink" title="代码地址"></a>代码地址</h1><blockquote>
+<p><a href="https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1" target="_blank" rel="external">https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IPC/" rel="tag"># IPC</a>
+          
+            <a href="/tags/AIDL/" rel="tag"># AIDL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/12/android/2015-3-12-Android-IPC-Messenger/" rel="next" title="Android-IPC-Messenger">
+                <i class="fa fa-chevron-left"></i> Android-IPC-Messenger
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/01/android/2015-5-1-Android-Parcelable/" rel="prev" title="Android-Parcelable">
+                Android-Parcelable <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="王亚楠" />
+          <p class="site-author-name" itemprop="name">王亚楠</p>
+           
+              <p class="site-description motion-element" itemprop="description">工作、分享、笔记</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/atopom" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、AIDL是什么"><span class="nav-number">1.</span> <span class="nav-text">一、AIDL是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、AIDL是干什么的"><span class="nav-number">2.</span> <span class="nav-text">二、AIDL是干什么的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android中其他进程间通信的方式"><span class="nav-number">2.1.</span> <span class="nav-text">Android中其他进程间通信的方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、AIDL怎么用"><span class="nav-number">3.</span> <span class="nav-text">三、AIDL怎么用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、AIDL语法"><span class="nav-number">3.1.</span> <span class="nav-text">1、AIDL语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件类型"><span class="nav-number">3.1.1.</span> <span class="nav-text">文件类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据类型"><span class="nav-number">3.1.2.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定向tag"><span class="nav-number">3.1.3.</span> <span class="nav-text">定向tag</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、具体操作"><span class="nav-number">3.2.</span> <span class="nav-text">2、具体操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AIDL代码"><span class="nav-number">3.2.1.</span> <span class="nav-text">AIDL代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端代码"><span class="nav-number">3.2.2.</span> <span class="nav-text">服务端代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端代码"><span class="nav-number">3.2.3.</span> <span class="nav-text">客户端代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、注意事项"><span class="nav-number">3.3.</span> <span class="nav-text">3、注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、AIDL工作原理"><span class="nav-number">4.</span> <span class="nav-text">四、AIDL工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、AIDL结构类图"><span class="nav-number">5.</span> <span class="nav-text">五、AIDL结构类图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码地址"><span class="nav-number">6.</span> <span class="nav-text">代码地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王亚楠</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

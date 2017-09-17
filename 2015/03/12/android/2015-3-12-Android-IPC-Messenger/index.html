@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="IPC,Messenger," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Messenger信使 官方文档解释：它引用了一个Handler对象，以便others能够向它发送消息(使用mMessenger.send(Message msg)方法)。该类允许跨进程间基于Message通信(即两个进程间可以通过Message进行通信)。简单理解，就是在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以与服务端通信了。  以前我们使用Ha">
+<meta name="keywords" content="IPC,Messenger">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-IPC-Messenger">
+<meta property="og:url" content="http://yoursite.com/2015/03/12/android/2015-3-12-Android-IPC-Messenger/index.html">
+<meta property="og:site_name" content="Atopom博客">
+<meta property="og:description" content="Messenger信使 官方文档解释：它引用了一个Handler对象，以便others能够向它发送消息(使用mMessenger.send(Message msg)方法)。该类允许跨进程间基于Message通信(即两个进程间可以通过Message进行通信)。简单理解，就是在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以与服务端通信了。  以前我们使用Ha">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/Android/Messenger_Work_Principle.png">
+<meta property="og:updated_time" content="2017-09-17T11:08:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-IPC-Messenger">
+<meta name="twitter:description" content="Messenger信使 官方文档解释：它引用了一个Handler对象，以便others能够向它发送消息(使用mMessenger.send(Message msg)方法)。该类允许跨进程间基于Message通信(即两个进程间可以通过Message进行通信)。简单理解，就是在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以与服务端通信了。  以前我们使用Ha">
+<meta name="twitter:image" content="http://yoursite.com/images/Android/Messenger_Work_Principle.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/03/12/android/2015-3-12-Android-IPC-Messenger/"/>
+
+
+
+
+
+  <title>Android-IPC-Messenger | Atopom博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Atopom博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/03/12/android/2015-3-12-Android-IPC-Messenger/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王亚楠">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Atopom博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android-IPC-Messenger</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-12T16:38:10+08:00">
+                2015-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Messenger信使"><a href="#Messenger信使" class="headerlink" title="Messenger信使"></a>Messenger信使</h1><blockquote>
+<p>官方文档解释：它引用了一个Handler对象，以便others能够向它发送消息(使用mMessenger.send(Message msg)方法)。该类允许跨进程间基于Message通信(即两个进程间可以通过Message进行通信)。简单理解，就是在服务端使用Handler创建一个Messenger，客户端持有这个Messenger就可以与服务端通信了。</p>
+</blockquote>
+<p>以前我们使用Handler+Message的方式进行通信，都是在同一个进程中，从线程持有一个主线程的Handler对象，并向主线程发送消息。</p>
+<p>Android可以使用binder机制进行跨进行通信，所以我们就可以将Handler与binder结合起来进行跨进程发送消息。查看API就可以发现，Messenger就是通过这种方式的实现。</p>
+<p>一般使用方法如下：</p>
+<ol>
+<li><p>远程通过 mMessenger = new Messenger(mHandler) 创建一个信使对象</p>
+</li>
+<li><p>客户端使用 binderService 请求连接远程</p>
+</li>
+<li><p>远程 onBind 方法返回一个binder</p>
+<blockquote>
+<p>return mMessenger.getBinder();</p>
+</blockquote>
+</li>
+<li><p>客户端使用远程返回的binder得到一个信使（即得到远程信使）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public void onServiceConnected(ComponentName name, IBinder service) &#123;</div><div class="line">     rMessenger = new Messenger(service);    </div><div class="line">     ......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这里虽然是new了一个Messenger，但我们查看它的实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public Messenger(IBinder target) &#123; mTarget = IMessenger.Stub.asInterface(target); &#125;</div></pre></td></tr></table></figure></p>
+<p>发现它的mTarget是通过AIDL得到的，实际上就是远程创建的那个。</p>
+<ol>
+<li>客户端可以使用这个远程信使对象向远程发送消息：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rMessenger.send(msg);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这样远程服务端的Handler对象就能收到消息了，然后可以在其handlerMessage(Message msg)方法中进行处理。（该Handler对象就是第一步服务端创建Messenger时使用的参数mHandler）。</p>
+<p>经过这5个步骤貌似只有客户端向服务端发送消息，这样的消息传递是单向的，那么如何实现双向传递呢？</p>
+<p>首先需要在第5步稍加修改，在send(msg)前通过msm.replyTo = mMessenger将自己的信使设置到消息中，这样服务端接收到消息时同时也得到了客户端的信使对象了，然后服务端可以通过得到客户端的信使对象，并向它发送消息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cMessenger = msg.replyTo;</div><div class="line">cMessenger.send(message);</div></pre></td></tr></table></figure></p>
+<p>即完成了从服务端向客户端发送消息的功能，这样客服端可以在自己的Handler对象的handlerMessage方法中接收服务端发送来的message进行处理。</p>
+<p>双向通信宣告完成。</p>
+<h1 id="Messenger工作原理"><a href="#Messenger工作原理" class="headerlink" title="Messenger工作原理"></a>Messenger工作原理</h1><p><img src="/images/Android/Messenger_Work_Principle.png" alt="Messenger的工作原理"></p>
+<h1 id="以下代码来自ApiDemo"><a href="#以下代码来自ApiDemo" class="headerlink" title="以下代码来自ApiDemo"></a>以下代码来自ApiDemo</h1><p>Service code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div></pre></td><td class="code"><pre><div class="line">public class MessengerService extends Service &#123;  </div><div class="line">    /** For showing and hiding our notification. */  </div><div class="line">    NotificationManager mNM;  </div><div class="line">    /** Keeps track of all current registered clients. */  </div><div class="line">    ArrayList&lt;Messenger&gt; mClients = new ArrayList&lt;Messenger&gt;();  </div><div class="line">    /** Holds last value set by a client. */  </div><div class="line">    int mValue = 0;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Command to the service to register a client, receiving callbacks</div><div class="line">     * from the service.  The Message&apos;s replyTo field must be a Messenger of</div><div class="line">     * the client where callbacks should be sent.</div><div class="line">     */  </div><div class="line">    static final int MSG_REGISTER_CLIENT = 1;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Command to the service to unregister a client, ot stop receiving callbacks</div><div class="line">     * from the service.  The Message&apos;s replyTo field must be a Messenger of</div><div class="line">     * the client as previously given with MSG_REGISTER_CLIENT.</div><div class="line">     */  </div><div class="line">    static final int MSG_UNREGISTER_CLIENT = 2;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Command to service to set a new value.  This can be sent to the</div><div class="line">     * service to supply a new value, and will be sent by the service to</div><div class="line">     * any registered clients with the new value.</div><div class="line">     */  </div><div class="line">    static final int MSG_SET_VALUE = 3;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Handler of incoming messages from clients.</div><div class="line">     */  </div><div class="line">    class IncomingHandler extends Handler &#123;  </div><div class="line">        @Override  </div><div class="line">        public void handleMessage(Message msg) &#123;  </div><div class="line">            switch (msg.what) &#123;  </div><div class="line">                case MSG_REGISTER_CLIENT:  </div><div class="line">                    mClients.add(msg.replyTo);  </div><div class="line">                    break;  </div><div class="line">                case MSG_UNREGISTER_CLIENT:  </div><div class="line">                    mClients.remove(msg.replyTo);  </div><div class="line">                    break;  </div><div class="line">                case MSG_SET_VALUE:  </div><div class="line">                    mValue = msg.arg1;  </div><div class="line">                    for (int i = mClients.size() - 1; i &gt;= 0; i --) &#123;  </div><div class="line">                        try &#123;  </div><div class="line">                            mClients.get(i).send(Message.obtain(null,  </div><div class="line">                                    MSG_SET_VALUE, mValue, 0));  </div><div class="line">                        &#125; catch (RemoteException e) &#123;  </div><div class="line">                            // The client is dead.  Remove it from the list;   </div><div class="line">                            // we are going through the list from back to front   </div><div class="line">                            // so this is safe to do inside the loop.   </div><div class="line">                            mClients.remove(i);  </div><div class="line">                        &#125;  </div><div class="line">                    &#125;  </div><div class="line">                    break;  </div><div class="line">                default:  </div><div class="line">                    super.handleMessage(msg);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Target we publish for clients to send messages to IncomingHandler.</div><div class="line">     */  </div><div class="line">    final Messenger mMessenger = new Messenger(new IncomingHandler());  </div><div class="line"></div><div class="line">    @Override  </div><div class="line">    public void onCreate() &#123;  </div><div class="line">        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);  </div><div class="line"></div><div class="line">        // Display a notification about us starting.   </div><div class="line">        showNotification();  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    @Override  </div><div class="line">    public void onDestroy() &#123;  </div><div class="line">        // Cancel the persistent notification.   </div><div class="line">        mNM.cancel(R.string.remote_service_started);  </div><div class="line"></div><div class="line">        // Tell the user we stopped.   </div><div class="line">        Toast.makeText(this, R.string.remote_service_stopped, Toast.LENGTH_SHORT).show();  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * When binding to the service, we return an interface to our messenger</div><div class="line">     * for sending messages to the service.</div><div class="line">     */  </div><div class="line">    @Override  </div><div class="line">    public IBinder onBind(Intent intent) &#123;  </div><div class="line">        return mMessenger.getBinder();  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    /**</div><div class="line">     * Show a notification while this service is running.</div><div class="line">     */  </div><div class="line">    private void showNotification() &#123;  </div><div class="line">        // In this sample, we&apos;ll use the same text for the ticker and the expanded notification   </div><div class="line">        CharSequence text = getText(R.string.remote_service_started);  </div><div class="line"></div><div class="line">        // Set the icon, scrolling text and timestamp   </div><div class="line">        Notification notification = new Notification(R.drawable.stat_sample, text,  </div><div class="line">                System.currentTimeMillis());  </div><div class="line"></div><div class="line">        // The PendingIntent to launch our activity if the user selects this notification   </div><div class="line">        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,  </div><div class="line">                new Intent(this, Controller.class), 0);  </div><div class="line"></div><div class="line">        // Set the info for the views that show in the notification panel.   </div><div class="line">        notification.setLatestEventInfo(this, getText(R.string.remote_service_label),  </div><div class="line">                       text, contentIntent);  </div><div class="line"></div><div class="line">        // Send the notification.   </div><div class="line">        // We use a string id because it is a unique number.  We use it later to cancel.   </div><div class="line">        mNM.notify(R.string.remote_service_started, notification);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="自己的DEMO："><a href="#自己的DEMO：" class="headerlink" title="自己的DEMO："></a>自己的DEMO：</h1><ol>
+<li><p>MyActivity Code</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">public class MyActivity extends Activity &#123;</div><div class="line"></div><div class="line">    protected static final int HELLO_CLIENT = 0;</div><div class="line">    private MyServiceConnection conn;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onStart() &#123;</div><div class="line">        super.onStart();</div><div class="line">        Intent service = new Intent(this, MyService.class);</div><div class="line">        conn = new MyServiceConnection();</div><div class="line">        bindService(service, conn, BIND_AUTO_CREATE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onDestroy() &#123;</div><div class="line">        super.onDestroy();</div><div class="line">        unbindService(conn);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean onCreateOptionsMenu(Menu menu) &#123;</div><div class="line">        // Inflate the menu; this adds items to the action bar if it is present.</div><div class="line">        getMenuInflater().inflate(R.menu.main, menu);</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private Handler handler = new Handler() &#123;</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            switch(msg.what) &#123;</div><div class="line">            case HELLO_CLIENT:</div><div class="line">                Log.d(&quot;wangyanan&quot;, &quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; hello client &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    private Messenger clientMessenger;</div><div class="line">    private Messenger serviceMessenger;</div><div class="line"></div><div class="line">    class MyServiceConnection implements ServiceConnection &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</div><div class="line"></div><div class="line">            clientMessenger = new Messenger(handler);</div><div class="line">            serviceMessenger = new Messenger(service);</div><div class="line">            sendServiceMessage(MyService.HELLO_SERVICE);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceDisconnected(ComponentName name) &#123;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void sendServiceMessage(int what) &#123;</div><div class="line">        try &#123;</div><div class="line">            Message message = Message.obtain(null, MyService.HELLO_SERVICE);</div><div class="line">            message.replyTo = clientMessenger;</div><div class="line">            serviceMessenger.send(message);</div><div class="line">        &#125; catch (RemoteException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            Toast.makeText(MyActivity.this, &quot;与服务器连接失败&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>MyService Code</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">public class MyService extends Service &#123;</div><div class="line"></div><div class="line">    protected static final int HELLO_SERVICE = 0;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public IBinder onBind(Intent intent) &#123;</div><div class="line">        Log.d(&quot;wangyanan&quot;, &quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; MyService onBind......&quot;);</div><div class="line">        return serviceMessenger.getBinder();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int onStartCommand(Intent intent, int flags, int startId) &#123;</div><div class="line">        Log.d(&quot;wangyanan&quot;, &quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; MyService onStartComand......&quot;);</div><div class="line">        return super.onStartCommand(intent, flags, startId);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private Handler handler = new Handler() &#123;</div><div class="line"></div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line"></div><div class="line">            switch(msg.what) &#123;</div><div class="line">            case HELLO_SERVICE:</div><div class="line">                Log.d(&quot;wangyanan&quot;, &quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; hello service &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;);</div><div class="line">                clientMessenger = msg.replyTo;</div><div class="line">                sendClientMessage(MyActivity.HELLO_CLIENT);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    private Messenger serviceMessenger = new Messenger(handler);</div><div class="line">    private Messenger clientMessenger = new Messenger(handler);</div><div class="line"></div><div class="line">    private void sendClientMessage(int what) &#123;</div><div class="line">        try &#123;</div><div class="line">            Message message = Message.obtain(null, what);</div><div class="line">            clientMessenger.send(message);</div><div class="line">        &#125; catch (RemoteException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Log打印结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">07-27 10:46:54.049: D/wangyanan(8876): &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; MyService onBind......</div><div class="line">07-27 10:46:54.220: D/wangyanan(8876): &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; hello service &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div><div class="line">07-27 10:46:54.220: D/wangyanan(8876): &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; hello client &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="代码地址"><a href="#代码地址" class="headerlink" title="代码地址"></a>代码地址</h1><blockquote>
+<p><a href="https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1" target="_blank" rel="external">https://github.com/atopom/android_first_draft/tree/master/Code/IPC%E9%80%9A%E4%BF%A1</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IPC/" rel="tag"># IPC</a>
+          
+            <a href="/tags/Messenger/" rel="tag"># Messenger</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/02/12/objectc/2015-2-12-OC-DataType/" rel="next" title="Object-C－DataType">
+                <i class="fa fa-chevron-left"></i> Object-C－DataType
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/05/android/2015-4-5-Android-IPC-AIDL/" rel="prev" title="Android-IPC-AIDL">
+                Android-IPC-AIDL <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="王亚楠" />
+          <p class="site-author-name" itemprop="name">王亚楠</p>
+           
+              <p class="site-description motion-element" itemprop="description">工作、分享、笔记</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/atopom" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Messenger信使"><span class="nav-number">1.</span> <span class="nav-text">Messenger信使</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Messenger工作原理"><span class="nav-number">2.</span> <span class="nav-text">Messenger工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#以下代码来自ApiDemo"><span class="nav-number">3.</span> <span class="nav-text">以下代码来自ApiDemo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己的DEMO："><span class="nav-number">4.</span> <span class="nav-text">自己的DEMO：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码地址"><span class="nav-number">5.</span> <span class="nav-text">代码地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王亚楠</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
